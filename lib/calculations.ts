@@ -33,3 +33,23 @@ export function calculateAffordableCarPrice(
 ) {
   return loanAmount + downPayment;
 }
+export function calculateAffordabilityRating(
+  income: number,
+  totalEmi: number
+) {
+  const emiRatio = (totalEmi / income) * 100;
+
+  if (emiRatio <= 20) {
+    return "Excellent";
+  }
+
+  if (emiRatio <= 30) {
+    return "Good";
+  }
+
+  if (emiRatio <= 40) {
+    return "Fair";
+  }
+
+  return "Risky";
+}
