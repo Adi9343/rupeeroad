@@ -53,3 +53,18 @@ export function calculateAffordabilityRating(
 
   return "Risky";
 }
+export function calculateRecommendation(rating: string) {
+  switch (rating) {
+    case "Excellent":
+      return "You can comfortably afford this purchase. You still have room in your monthly budget for savings and future goals.";
+
+    case "Good":
+      return "This purchase appears affordable. Keep your total EMI below 30% of your monthly income to maintain financial flexibility.";
+
+    case "Fair":
+      return "Consider choosing a slightly less expensive vehicle or increasing your down payment to reduce your monthly EMI.";
+
+    default:
+      return "This purchase may put pressure on your finances. Consider lowering your budget or increasing your down payment before proceeding.";
+  }
+}

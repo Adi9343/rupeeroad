@@ -8,6 +8,7 @@ import {
   calculateLoanEligibility,
   calculateAffordableCarPrice,
   calculateAffordabilityRating,
+  calculateRecommendation,
 } from "@/lib/calculations";
 export default function CarQuestionnairePage() {
   const [income, setIncome] = useState("");
@@ -20,6 +21,7 @@ export default function CarQuestionnairePage() {
   maxLoan: number;
   maxCarPrice: number;
   rating: string;
+    recommendation: string;
 } | null>(null);
   const calculateAffordability = () => {
     const safeEmi = calculateSafeEmi(
@@ -35,15 +37,19 @@ export default function CarQuestionnairePage() {
   estimatedLoan,
   Number(downPayment)
 );
+const totalEmi = Number(emi) + safeEmi;
+
 const affordabilityRating = calculateAffordabilityRating(
   Number(income),
-  safeEmi + Number(emi)
+  totalEmi
 );
+const recommendation = calculateRecommendation(affordabilityRating);
   setResult({
   safeEmi,
   maxLoan: estimatedLoan,
   maxCarPrice: affordableCarPrice,
   rating: affordabilityRating,
+   recommendation,
 });
   };
   return (
@@ -106,6 +112,7 @@ const affordabilityRating = calculateAffordabilityRating(
   maxLoan={result.maxLoan}
   maxCarPrice={result.maxCarPrice}
   rating={result.rating}
+  recommendation={result.recommendation}
 />
 )}
       </div>
