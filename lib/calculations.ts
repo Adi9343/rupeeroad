@@ -10,3 +10,26 @@ export function calculateEstimatedLoan(
 ) {
   return safeEmi * loanTenure * 12;
 }
+export function calculateLoanEligibility(
+  emi: number,
+  annualInterestRate: number,
+  years: number
+) {
+  const monthlyRate = annualInterestRate / 12 / 100;
+  const months = years * 12;
+
+  if (monthlyRate === 0) {
+    return emi * months;
+  }
+
+  return (
+    emi *
+    ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate)
+  );
+}
+export function calculateAffordableCarPrice(
+  loanAmount: number,
+  downPayment: number
+) {
+  return loanAmount + downPayment;
+}
