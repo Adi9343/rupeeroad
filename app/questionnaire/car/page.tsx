@@ -1,69 +1,64 @@
 "use client";
-import ResultCard from "@/components/ui/ResultCard";
-import FormInput from "@/components/ui/FormInput";
+
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+
+import CalculatorLayout from "@/components/layout/CalculatorLayout";
+import FormInput from "@/components/ui/FormInput";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import CarResultCard from "@/components/results/CarResultCard";
+
 import {
-  calculateSafeEmi,
-  calculateLoanEligibility,
-  calculateAffordableCarPrice,
-  calculateAffordabilityRating,
-  calculateRecommendation,
-} from "@/lib/calculations";
+  calculateCarAffordability,
+  CarAffordabilityResult,
+} from "@/lib/calculations/car";
+
 export default function CarQuestionnairePage() {
+  const searchParams = useSearchParams();
+
+  const product = searchParams.get("product") || "car";
+  const variant = searchParams.get("variant") || "-";
+  const price = Number(searchParams.get("price")) || 0;
+
   const [income, setIncome] = useState("");
   const [emi, setEmi] = useState("");
   const [downPayment, setDownPayment] = useState("");
   const [loanTenure, setLoanTenure] = useState("");
   const [interestRate, setInterestRate] = useState("9");
- const [result, setResult] = useState<{
-  safeEmi: number;
-  maxLoan: number;
-  maxCarPrice: number;
-  rating: string;
-    recommendation: string;
-} | null>(null);
-  const calculateAffordability = () => {
-    const safeEmi = calculateSafeEmi(
-      Number(income),
-      Number(emi)
-    );
-    const estimatedLoan = calculateLoanEligibility(
-  safeEmi,
-  Number(interestRate),
-      Number(loanTenure)
-    );
-    const affordableCarPrice = calculateAffordableCarPrice(
-  estimatedLoan,
-  Number(downPayment)
-);
-const totalEmi = Number(emi) + safeEmi;
 
-const affordabilityRating = calculateAffordabilityRating(
-  Number(income),
-  totalEmi
-);
-const recommendation = calculateRecommendation(affordabilityRating);
-  setResult({
-  safeEmi,
-  maxLoan: estimatedLoan,
-  maxCarPrice: affordableCarPrice,
-  rating: affordabilityRating,
-   recommendation,
-});
+  const [result, setResult] =
+    useState<CarAffordabilityResult | null>(null);
+
+  function calculate() {
+    const report = calculateCarAffordability({
+      monthlyIncome: Number(income),
+      existingEmi: Number(emi),
+      downPayment: Number(downPayment),
+      loanTenure: Number(loanTenure),
+      carPrice: price,
+      interestRate: Number(interestRate),
+    });
+
+    setResult(report);
+  }
+
+  const formatProductName = (slug: string) => {
+    return slug
+      .split("-")
+      .map(
+        (word) =>
+          word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join(" ");
   };
-  return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-8 shadow-lg">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">
-            Car Affordability Check
-          </h1>
 
-          <p className="mt-3 text-gray-600">
-            Answer a few questions to see how much car you can safely afford.
-          </p>
-        </div>
+  return (
+    <CalculatorLayout
+      title="Car Affordability Calculator"
+      description="Find out how much car you can comfortably afford based on your income, existing EMI, down payment and loan interest rate."
+    >
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Monthly Income */}
         <FormInput
           label="Monthly Income"
           type="number"
@@ -71,6 +66,8 @@ const recommendation = calculateRecommendation(affordabilityRating);
           value={income}
           onChange={setIncome}
         />
+
+        {/* Existing EMI */}
         <FormInput
           label="Existing EMI"
           type="number"
@@ -78,6 +75,8 @@ const recommendation = calculateRecommendation(affordabilityRating);
           value={emi}
           onChange={setEmi}
         />
+
+        {/* Down Payment */}
         <FormInput
           label="Down Payment"
           type="number"
@@ -85,6 +84,8 @@ const recommendation = calculateRecommendation(affordabilityRating);
           value={downPayment}
           onChange={setDownPayment}
         />
+
+        {/* Loan Tenure */}
         <FormInput
           label="Loan Tenure (Years)"
           type="number"
@@ -92,30 +93,35 @@ const recommendation = calculateRecommendation(affordabilityRating);
           value={loanTenure}
           onChange={setLoanTenure}
         />
-        
 
-<FormInput
-  label="Interest Rate (%)"
-  type="number"
-  placeholder="Enter interest rate"
-  value={interestRate}
-  onChange={setInterestRate}
-/>
-        <div className="mt-8">
-          <PrimaryButton onClick={calculateAffordability}>
-            Calculate Affordability
-          </PrimaryButton>
-        </div>
-       {result && (
-  <ResultCard
-  safeEmi={result.safeEmi}
-  maxLoan={result.maxLoan}
-  maxCarPrice={result.maxCarPrice}
-  rating={result.rating}
-  recommendation={result.recommendation}
-/>
-)}
+        {/* Interest Rate */}
+        <FormInput
+          label="Loan Interest Rate (% p.a.)"
+          type="number"
+          placeholder="Enter interest rate"
+          value={interestRate}
+          onChange={setInterestRate}
+        />
       </div>
-    </main>
+
+      {/* Calculate Button */}
+      <div className="mt-8">
+        <PrimaryButton onClick={calculate}>
+          Calculate Car Affordability
+        </PrimaryButton>
+      </div>
+
+      {/* Result */}
+      {result && (
+        <div className="mt-10">
+          <CarResultCard
+            productName={formatProductName(product)}
+            variantName={variant}
+            finalPrice={price}
+            result={result}
+          />
+        </div>
+      )}
+    </CalculatorLayout>
   );
 }

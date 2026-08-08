@@ -1,67 +1,103 @@
 "use client";
-import Button from "@/components/ui/Button";
-import InfoCard from "@/components/cards/InfoCard";
-import SearchChip from "@/components/ui/SearchChip";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+
+const trendingSearches = [
+  "iPhone 17 Pro",
+  "Honda City",
+  "Goa Trip",
+  "Wedding",
+  "MacBook Pro",
+  "Gold Necklace",
+];
+
+const categories = [
+  {
+    emoji: "🚗",
+    title: "Vehicles",
+    description: "Cars, Bikes & EVs",
+  },
+  {
+    emoji: "🏠",
+    title: "Property",
+    description: "House & Real Estate",
+  },
+  {
+    emoji: "📱",
+    title: "Electronics",
+    description: "Phones, Laptops & Gadgets",
+  },
+  {
+    emoji: "🛋",
+    title: "Furniture",
+    description: "Home & Office",
+  },
+  {
+    emoji: "✈️",
+    title: "Travel",
+    description: "Vacations & Tours",
+  },
+  {
+    emoji: "🎓",
+    title: "Education",
+    description: "Courses & Degrees",
+  },
+  {
+    emoji: "💍",
+    title: "Wedding",
+    description: "Marriage Planning",
+  },
+  {
+    emoji: "💰",
+    title: "Investments",
+    description: "Gold, SIP & Stocks",
+  },
+];
+
 export default function SearchSection() {
-  const [search, setSearch] = useState("");
-  const router = useRouter();
-  function handleGetStarted() {
- router.push("/questionnaire/car");
-}
   return (
-    <section className="max-w-5xl mx-auto px-8 py-16">
-      <div className="bg-white rounded-2xl shadow-lg p-10">
-        <InfoCard title="Monthly Income" value="₹75,000" />
+    <section className="bg-slate-50 py-16">
+      <div className="mx-auto max-w-7xl px-6">
+        {/* Trending Searches */}
 
-        <input
-          type="text"
-          value={search}
-onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search anything... Car, Bike, Phone, House, Wedding, Education loan, Trip, Laptop..."
-          className="w-full mt-8 p-5 border border-gray-300 rounded-2xl text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
+        <h3 className="text-xl font-bold text-slate-900">
+          🔥 Trending Searches
+        </h3>
 
-        <div className="flex flex-wrap justify-center gap-3 mt-6">
-       <SearchChip
-  icon="🚗"
-  text="Car"
-  onClick={() => setSearch("Car")}
-/>
-<SearchChip
-  icon="🏍️"
-  text="Bike"
-  onClick={() => setSearch("Bike")}
-/>
+        <div className="mt-6 flex flex-wrap gap-3">
+          {trendingSearches.map((item) => (
+            <button
+              key={item}
+              className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-500 hover:text-blue-600 hover:shadow-md"
+            >
+              {item}
+            </button>
+          ))}
+        </div>
 
-<SearchChip
-  icon="📱"
-  text="Phone"
-  onClick={() => setSearch("Phone")}
-/>
+        {/* Browse Categories */}
 
-<SearchChip
-  icon="💻"
-  text="Laptop"
-  onClick={() => setSearch("Laptop")}
-/>
+        <div className="mt-16">
+          <h3 className="text-xl font-bold text-slate-900">
+            Browse Categories
+          </h3>
 
-<SearchChip
-  icon="🏠"
-  text="House"
-  onClick={() => setSearch("House")}
-/>        </div>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {categories.map((category) => (
+              <button
+                key={category.title}
+                className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl"
+              >
+                <div className="text-4xl">{category.emoji}</div>
 
-        <p className="mt-4 text-gray-600">
-          This is the beginning of your AI-powered financial platform.
-        </p>
+                <h4 className="mt-5 text-lg font-bold text-slate-900">
+                  {category.title}
+                </h4>
 
-        <div className="mt-8">
-          <Button
-  text="Get Started"
-  onClick={handleGetStarted}
-/>
+                <p className="mt-2 text-sm text-slate-500">
+                  {category.description}
+                </p>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </section>

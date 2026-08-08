@@ -1,15 +1,49 @@
+import Container from "@/components/ui/Container";
+import Button from "@/components/ui/Button";
+
 export default function Navbar() {
   return (
-    <header className="bg-white border-b shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-4">
-        <h1 className="text-2xl font-bold text-blue-700">
-          RupeeRoad 🚀
-        </h1>
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+      <Container>
+        <div className="flex h-20 items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white">
+              ₹
+            </div>
 
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold transition">
-  Toggle Theme
-</button>
-      </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">
+                RupeeRoad
+              </h1>
+              <p className="text-xs text-slate-500">
+                Financial Decision Platform
+              </p>
+            </div>
+          </div>
+
+          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+            <a href="#" className="transition hover:text-blue-600">
+              Home
+            </a>
+
+            <a href="#" className="transition hover:text-blue-600">
+              Calculators
+            </a>
+
+            <a href="#" className="transition hover:text-blue-600">
+              Financial Health
+            </a>
+
+            <a href="#" className="transition hover:text-blue-600">
+              AI Advisor
+            </a>
+          </nav>
+
+          <Button>
+            Get Started
+          </Button>
+        </div>
+      </Container>
     </header>
   );
 }
