@@ -129,6 +129,7 @@ export default function BudgetPlannerPage() {
             emergencyFundTarget={result.emergencyFundTarget}
             budgetHealthScore={result.budgetHealthScore}
             rating={result.rating}
+            breakdown={result.breakdown}
           />
         </>
       )}
