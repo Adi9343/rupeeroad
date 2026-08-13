@@ -142,3 +142,4 @@ function CarQuestionnaireLoading() {
       <p className="text-center text-slate-600">Preparing your calculator...</p>
     </CalculatorLayout>
   );
+}
