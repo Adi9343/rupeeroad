@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Container from "@/components/ui/Container";
 import Heading from "@/components/ui/Heading";
 import SearchInput from "@/components/search/SearchInput";
@@ -10,11 +11,13 @@ export default function SearchPage() {
           <Heading
             title="Search Products"
             subtitle="Find the product you want to buy and let RupeeRoad analyze whether you can comfortably afford it."
-            center
+            align="center"
           />
 
           <div className="mt-10">
-            <SearchInput />
+            <Suspense fallback={<p className="text-center text-slate-600">Loading search...</p>}>
+              <SearchInput />
+            </Suspense>
           </div>
         </div>
       </Container>
