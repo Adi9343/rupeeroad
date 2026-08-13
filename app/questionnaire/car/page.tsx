@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import CalculatorLayout from "@/components/layout/CalculatorLayout";
 import FormInput from "@/components/ui/FormInput";
@@ -14,6 +14,14 @@ import {
 } from "@/lib/calculations/car";
 
 export default function CarQuestionnairePage() {
+  return (
+    <Suspense fallback={<CarQuestionnaireLoading />}>
+      <CarQuestionnaireContent />
+    </Suspense>
+  );
+}
+
+function CarQuestionnaireContent() {
   const searchParams = useSearchParams();
 
   const product = searchParams.get("product") || "car";
@@ -125,3 +133,12 @@ export default function CarQuestionnairePage() {
     </CalculatorLayout>
   );
 }
+function CarQuestionnaireLoading() {
+  return (
+    <CalculatorLayout
+      title="Car Affordability Calculator"
+      description="Loading your car affordability calculator."
+    >
+      <p className="text-center text-slate-600">Preparing your calculator...</p>
+    </CalculatorLayout>
+  );
