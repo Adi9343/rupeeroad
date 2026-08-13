@@ -11,29 +11,36 @@ import { getProductById } from "@/lib/search/search";
 import { ProductVariant } from "@/lib/search/types";
 
 export default function ProductPage() {
-  const params = useParams();
+  const params = useParams<{ id?: string }>();
   const router = useRouter();
 
-  const id = params.id as string;
-  const product = getProductById(id);
-
-  if (!product) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
-        Product not found.
-      </main>
-    );
-  }
-
-  const defaultVariant = product.variants?.[0];
+  const product =
+    typeof params.id === "string"
+      ? getProductById(params.id)
+      : undefined;
+  const defaultVariant = product?.variants?.[0];
 
   const [selectedVariant, setSelectedVariant] =
     useState<ProductVariant | undefined>(defaultVariant);
 
   const [price, setPrice] = useState(
     defaultVariant?.exShowroomPrice.toString() ??
-      product.estimatedPrice.toString()
+      product?.estimatedPrice.toString() ??
+      ""
   );
+
+  if (!product) {
+    return (
+      <main className="flex min-h-screen items-center justify-center px-6">
+        <p className="rounded-xl bg-white p-6 text-slate-700 shadow-sm">
+          Product not found. Please return to search and choose a listed product.
+        </p>
+      </main>
+    );
+  }
+
+  const productCategory = product.category;
+  const productId = product.id;
 
   function handleVariantChange(variant: ProductVariant) {
     setSelectedVariant(variant);
@@ -42,7 +49,7 @@ export default function ProductPage() {
 
   function handleContinue() {
     router.push(
-      `/questionnaire/${product.category}?product=${product.id}&variant=${encodeURIComponent(
+      `/questionnaire/${productCategory}?product=${productId}&variant=${encodeURIComponent(
         selectedVariant?.name ?? ""
       )}&price=${price}`
     );
@@ -133,7 +140,7 @@ export default function ProductPage() {
                   <br />
                   <br />
                   For the most accurate affordability analysis, please update
-                  the amount below to your dealer's final on-road quotation
+                  the amount below to your dealer&apos;s final on-road quotation
                   (if available).
                 </p>
               </div>
